@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from optparse import OptionParser
+import argparse
 
 pp = pprint.PrettyPrinter(indent=4, stream=sys.stderr)
 
@@ -138,44 +138,44 @@ class iperf3_plotter(object):
 
 class iperf3_dataParser(object):
     def getOptionParser(self):
-        usage = '%prog [ -f FOLDER | -o OUT | -p PLOTFILES | -n NOPLOTFILES | -v ]'
-        return OptionParser(usage=usage)
+        usage = '%(prog)s [ -f FOLDER | -o OUT | -p PLOTFILES | -n NOPLOTFILES | -v ]'
+        return argparse.ArgumentParser(usage=usage)
 
     def parseOptions(self, args):
         parser = self.getOptionParser()
-        parser.add_option('-f', '--folder', metavar='FILE',
-                          type='string', dest='foldername',
-                          help='Input folder absolute path. [Input Format: /Users/iperfExp]')
+        parser.add_argument('-f', '--folder', metavar='FILE',
+                            type=str, dest='foldername',
+                            help='Input folder absolute path. [Input Format: /Users/iperfExp]')
 
-        parser.add_option('-o', '--output', metavar='OUT',
-                          type='string', dest='output', default="iperf.png",
-                          help='Plot file name. [Input Format: iperf.png]')
+        parser.add_argument('-o', '--output', metavar='OUT',
+                            type=str, dest='output', default="iperf.png",
+                            help='Plot file name. [Input Format: iperf.png]')
 
-        parser.add_option('-p', '--plotfiles', metavar='PLOT_FILES',
-                          type='string', dest='plotFiles', default="",
-                          help='Choose files to be plotted. If no specified, all files in folder. [Input Format: f1,f2,f3]')
+        parser.add_argument('-p', '--plotfiles', metavar='PLOT_FILES',
+                            type=str, dest='plotFiles', default="",
+                            help='Choose files to be plotted. If no specified, all files in folder. [Input Format: f1,f2,f3]')
 
-        parser.add_option('-n', '--noPlotFiles', metavar='NO_PLOT_FILES',
-                          type='string', dest='noPlotFiles', default="",
-                          help='Choose files not to be plotted. [Input Format: f1,f2,f3]')
+        parser.add_argument('-n', '--noPlotFiles', metavar='NO_PLOT_FILES',
+                            type=str, dest='noPlotFiles', default="",
+                            help='Choose files not to be plotted. [Input Format: f1,f2,f3]')
 
-        parser.add_option('-u', '--upperLimit', metavar='UPPER_LIMIT',
-                          type='float', dest='upperLimit', default=0,
-                          help='The expected upper boundary. [Input Format: 0.5]')
+        parser.add_argument('-u', '--upperLimit', metavar='UPPER_LIMIT',
+                            type=float, dest='upperLimit', default=0,
+                            help='The expected upper boundary. [Input Format: 0.5]')
 
-        parser.add_option('-l', '--lowerLimit', metavar='LOWER_LIMIT',
-                          type='float', dest='lowerLimit', default=0,
-                          help='The expected lower boundary. [Input Format: 0.5]')
+        parser.add_argument('-l', '--lowerLimit', metavar='LOWER_LIMIT',
+                            type=float, dest='lowerLimit', default=0,
+                            help='The expected lower boundary. [Input Format: 0.5]')
 
-        parser.add_option('-b', '--bound', metavar='BOUND',
-                          type='string', dest='bound', default="",
-                          help='Provide multiple bound in pairs. [Input Format: [upperbound, lowerbound, tag]')
+        parser.add_argument('-b', '--bound', metavar='BOUND',
+                            type=str, dest='bound', default="",
+                            help='Provide multiple bound in pairs. [Input Format: [upperbound, lowerbound, tag]')
 
-        parser.add_option('-v', '--verbose',
-                          dest='verbose', action='store_true', default=False,
-                          help='Verbose debug output to stderr.')
+        parser.add_argument('-v', '--verbose',
+                            dest='verbose', action='store_true', default=False,
+                            help='Verbose debug output to stderr.')
 
-        options, _ = parser.parse_args(args)
+        options = parser.parse_args(args)
         # print(options)
         if not options.foldername:
             parser.error('Foldername is required.')
